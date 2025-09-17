@@ -1,0 +1,38 @@
+networks:
+  manage-students-network:
+  # default:
+  #   name: manage-students-network
+
+services:
+  manage-students-api:
+    image: ${DOCKER_REGISTRY-}manage-students-api
+    container_name: manage-students-API
+    build:
+      context: .
+      dockerfile: ManageStudents.API/Dockerfile
+    depends_on:
+      - manage-students-db
+    networks:
+      - manage-students-network
+
+  manage-students-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    container_name: manage-students-DB
+    hostname: sql-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_USER=sa
+      - MSSQL_SA_PASSWORD=ManageStudents__Password
+    ports:
+      - 7165:1433
+    expose:
+      - 7165
+    volumes:
+      - manage-students-db:/var/opt/mssql
+    networks:
+      - manage-students-network
+
+volumes:
+  manage-students-db:

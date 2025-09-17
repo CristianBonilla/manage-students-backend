@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>371363fe-399a-4870-b336-1f4f36c6887f</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +43,10 @@
     <ProjectReference Include="..\ManageStudents.Domain\ManageStudents.Domain.csproj" />
     <ProjectReference Include="..\ManageStudents.Helpers\ManageStudents.Helpers.csproj" />
     <ProjectReference Include="..\ManageStudents.Infrastructure\ManageStudents.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

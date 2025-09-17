@@ -1,0 +1,16 @@
+services:
+  manage-students-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:811;http://+:633
+      - ASPNETCORE_HTTPS_PORTS=31801
+      - ASPNETCORE_HTTP_PORTS=31800
+      - PROCESS_TYPE=docker-compose
+    ports:
+      - "31801:811"
+      - "31800:633"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
