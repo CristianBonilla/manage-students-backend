@@ -48,9 +48,9 @@ class TeacherConfig(ISeedData _seedData) : IEntityTypeConfiguration<TeacherEntit
       .IsUnicode(false)
       .IsRequired();
     builder
-      .Property(property => property.SubjectName)
+      .Property(property => property.Subject)
       .HasColumnOrder(6)
-      .HasConversion(subjectName => subjectName.GetDescription(), subjectName => Enum.Parse<SubjectNames>(subjectName.Trim()))
+      .HasConversion(subject => subject.GetDescription(), subject => Enum.Parse<SubjectName>(subject.Trim()))
       .IsRequired();
     builder
       .Property(property => property.CreatedAt)

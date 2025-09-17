@@ -1,6 +1,6 @@
 namespace ManageStudents.Contracts.Enums;
 
-public enum ProcessTypes : ushort
+public enum ProcessType : ushort
 {
   Local = 0 | 1,
   IISExpress = 2,

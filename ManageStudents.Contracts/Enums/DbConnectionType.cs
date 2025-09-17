@@ -1,6 +1,6 @@
 namespace ManageStudents.Contracts.Enums;
 
-public enum DbConnectionTypes : ushort
+public enum DbConnectionType : ushort
 {
   OpenConnection = 1,
   EnsureCreated = 2,

@@ -11,6 +11,6 @@ public class TeacherEntity : AuditableEntity
   public required string Firstname { get; set; }
   public required string Lastname { get; set; }
   public required string Email { get; set; }
-  public required SubjectNames SubjectName { get; set; }
+  public required SubjectName Subject { get; set; }
   public ICollection<GradeEntity> Grades { get; set; } = [];
 }

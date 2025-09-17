@@ -15,7 +15,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Ana",
       Lastname = "Pineda",
       Email = "ana.pineda@demo.edu",
-      SubjectName = SubjectNames.Mathematics
+      Subject = SubjectName.Mathematics
     },
     new()
     {
@@ -25,7 +25,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Luis",
       Lastname = "Montoya",
       Email = "luis.montoya@demo.edu",
-      SubjectName = SubjectNames.Spanish
+      Subject = SubjectName.Spanish
     },
     new()
     {
@@ -35,7 +35,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Claudia",
       Lastname = "Herrera",
       Email = "claudia.herrera@demo.edu",
-      SubjectName = SubjectNames.Biology
+      Subject = SubjectName.Biology
     },
     new()
     {
@@ -45,7 +45,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Jorge",
       Lastname = "Valencia",
       Email = "jorge.valencia@demo.edu",
-      SubjectName = SubjectNames.PoliticalScience
+      Subject = SubjectName.PoliticalScience
     },
     new()
     {
@@ -55,7 +55,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Marcela",
       Lastname = "Cruz",
       Email = "marcela.cruz@demo.edu",
-      SubjectName = SubjectNames.Chemistry
+      Subject = SubjectName.Chemistry
     },
     new()
     {
@@ -65,7 +65,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Ricardo",
       Lastname = "Salinas",
       Email = "ricardo.salinas@demo.edu",
-      SubjectName = SubjectNames.Physics
+      Subject = SubjectName.Physics
     },
     new()
     {
@@ -75,7 +75,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Patricia",
       Lastname = "Mora",
       Email = "patricia.mora@demo.edu",
-      SubjectName = SubjectNames.PhysicalEducation
+      Subject = SubjectName.PhysicalEducation
     },
     new()
     {
@@ -85,7 +85,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Fernando",
       Lastname = "García",
       Email = "fernando.garcia@demo.edu",
-      SubjectName = SubjectNames.Mathematics
+      Subject = SubjectName.Mathematics
     },
     new()
     {
@@ -95,7 +95,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Sandra",
       Lastname = "Luna",
       Email = "sandra.luna@demo.edu",
-      SubjectName = SubjectNames.Chemistry
+      Subject = SubjectName.Chemistry
     },
     new()
     {
@@ -105,7 +105,7 @@ class TeacherCollection : SeedDataCollection<TeacherEntity>
       Firstname = "Héctor",
       Lastname = "Ruiz",
       Email = "hector.ruiz@demo.edu",
-      SubjectName = SubjectNames.Physics
+      Subject = SubjectName.Physics
     }
   ];
 }

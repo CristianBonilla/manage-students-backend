@@ -1,6 +1,6 @@
 namespace ManageStudents.Contracts.Enums;
 
-public enum FileFormatTypes : ushort
+public enum FileFormatType : ushort
 {
   PlainText = 1,
   Xml = 2

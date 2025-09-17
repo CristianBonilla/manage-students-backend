@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace ManageStudents.Domain.Entities.Enums;
 
-public enum SubjectNames
+public enum SubjectName
 {
   [Description("Matemáticas")]
   Mathematics = 1,
