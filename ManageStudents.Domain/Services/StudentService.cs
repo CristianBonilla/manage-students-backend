@@ -10,11 +10,12 @@ namespace ManageStudents.Domain.Services;
 public class StudentService(
   IManageStudentsRepositoryContext _context,
   IStudentRepository _studentRepository,
-  IGradeRepository _gradeRepository) : IStudentService
+  IGradeRepository _gradeRepository,
+  ITeacherRepository _teacherRepository) : IStudentService
 {
   public async Task<StudentEntity> AddStudent(StudentEntity student, CancellationToken cancellationToken = default)
   {
-    await CheckStudent(student, cancellationToken);
+    CheckStudent(student);
     StudentEntity addedStudent = _studentRepository.Create(student);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -24,7 +25,7 @@ public class StudentService(
   public async Task<StudentEntity> UpdateStudent(StudentEntity student, CancellationToken cancellationToken = default)
   {
     CheckStudentById(student.StudentId);
-    await CheckStudent(student, cancellationToken);
+    CheckStudent(student);
     StudentEntity updatedStudent = _studentRepository.Update(student);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -54,6 +55,7 @@ public class StudentService(
 
   public IAsyncEnumerable<StudentEntity> GetStudentsExceptTeacherId(Guid teacherId)
   {
+    CheckTeacherById(teacherId);
     var students = _gradeRepository
       .GetByFilter(grade => grade.TeacherId != teacherId)
       .DistinctBy(grade => new { grade.TeacherId, grade.StudentId })
@@ -74,16 +76,22 @@ public class StudentService(
       throw new ServiceErrorException(HttpStatusCode.NotFound, $"Student not found with student identifier \"{studentId}\"");
   }
 
-  private async Task CheckStudent(StudentEntity studentRequired, CancellationToken cancellationToken = default)
+  private void CheckStudent(StudentEntity studentRequired, bool isUpdate = false)
   {
-    bool existingStudent = await GetStudents()
-      .AnyAsync(student =>
+    bool existingStudent = (!isUpdate ? _studentRepository.GetAll() : _studentRepository.GetByFilter(student => student.StudentId != studentRequired.StudentId))
+      .Any(student =>
         StringCommonHelper.IsStringEquivalent(student.DocumentNumber, studentRequired.DocumentNumber) ||
         StringCommonHelper.IsStringEquivalent(student.Email, studentRequired.Email) ||
-        StringCommonHelper.IsStringEquivalent(student.Mobile, studentRequired.Mobile),
-        cancellationToken);
+        StringCommonHelper.IsStringEquivalent(student.Mobile, studentRequired.Mobile));
     if (existingStudent)
       throw new ServiceErrorException(HttpStatusCode.BadRequest, "Student information provided may already exist: documentNumber, email or mobile");
+  }
+
+  private void CheckTeacherById(Guid teacherId)
+  {
+    bool existingTeacher = _teacherRepository.Exists(teacher => teacher.TeacherId == teacherId);
+    if (!existingTeacher)
+      throw new ServiceErrorException(HttpStatusCode.NotFound, $"Teacher not found with teacher identifier \"{teacherId}\"");
   }
 
   private StudentEntity GetStudentById(Guid studentId)

@@ -15,7 +15,7 @@ public class TeacherService(
 {
   public async Task<TeacherEntity> AddTeacher(TeacherEntity teacher, CancellationToken cancellationToken = default)
   {
-    await CheckTeacher(teacher, cancellationToken);
+    CheckTeacher(teacher);
     TeacherEntity addedTeacher = _teacherRepository.Create(teacher);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -25,7 +25,7 @@ public class TeacherService(
   public async Task<TeacherEntity> UpdateTeacher(TeacherEntity teacher, CancellationToken cancellationToken = default)
   {
     CheckTeacherById(teacher.TeacherId);
-    await CheckTeacher(teacher, cancellationToken);
+    CheckTeacher(teacher, true);
     TeacherEntity updatedTeacher = _teacherRepository.Update(teacher);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -81,14 +81,13 @@ public class TeacherService(
       throw new ServiceErrorException(HttpStatusCode.NotFound, $"Teacher not found with teacher identifier \"{teacherId}\"");
   }
 
-  private async Task CheckTeacher(TeacherEntity teacherRequired, CancellationToken cancellationToken = default)
+  private void CheckTeacher(TeacherEntity teacherRequired, bool isUpdate = false)
   {
-    bool existingTeacher = await GetTeachers()
-      .AnyAsync(teacher =>
+    bool existingTeacher = (!isUpdate ? _teacherRepository.GetAll() : _teacherRepository.GetByFilter(teacher => teacher.TeacherId != teacherRequired.TeacherId))
+      .Any(teacher =>
         StringCommonHelper.IsStringEquivalent(teacher.DocumentNumber, teacherRequired.DocumentNumber) ||
         StringCommonHelper.IsStringEquivalent(teacher.Email, teacherRequired.Email) ||
-        StringCommonHelper.IsStringEquivalent(teacher.Mobile, teacherRequired.Mobile),
-        cancellationToken);
+        StringCommonHelper.IsStringEquivalent(teacher.Mobile, teacherRequired.Mobile));
     if (existingTeacher)
       throw new ServiceErrorException(HttpStatusCode.BadRequest, "Teacher information provided may already exist: documentNumber, email or mobile");
   }

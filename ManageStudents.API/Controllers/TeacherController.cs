@@ -86,7 +86,7 @@ public class TeacherController(IMapper _mapper, ITeacherService _teacherService)
   }
 
   [HttpGet("hasAssociatedGrades/{teacherId}")]
-  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeacherResponse))]
+  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
   public async Task<bool> HasAssociatedGrades(Guid teacherId) => await _teacherService.HasAssociatedGrades(teacherId);
