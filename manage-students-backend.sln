@@ -30,6 +30,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageStudents.Helpers", "M
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C33F7AD9-3AD7-4987-8C7D-D377008D2D5C}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\1.0. manage-students-createteacher-script.sql = Scripts\1.0. manage-students-createteacher-script.sql
+		Scripts\1.1. manage-students-createstudent-script.sql = Scripts\1.1. manage-students-createstudent-script.sql
+		Scripts\1.2. manage-students-creategrade-script.sql = Scripts\1.2. manage-students-creategrade-script.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +81,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C29FE9E1-AAFE-4547-9548-298E343A5F0F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C33F7AD9-3AD7-4987-8C7D-D377008D2D5C} = {D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBAA995F-3EC4-4467-924D-D141E674B72D}

@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ManageStudents.Contracts.SeedData;
 using ManageStudents.Domain.Entities;
-using ManageStudents.Domain.Entities.Enums;
-using ManageStudents.Helpers.Extensions;
 
 namespace ManageStudents.Infrastructure.Contexts.ManageStudents.Config;
 
@@ -50,7 +48,7 @@ class TeacherConfig(ISeedData _seedData) : IEntityTypeConfiguration<TeacherEntit
     builder
       .Property(property => property.Subject)
       .HasColumnOrder(6)
-      .HasConversion(subject => subject.GetDescription(), subject => Enum.Parse<SubjectName>(subject.Trim()))
+      .HasConversion<string>()
       .IsRequired();
     builder
       .Property(property => property.CreatedAt)

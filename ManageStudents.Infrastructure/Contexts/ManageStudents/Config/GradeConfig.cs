@@ -14,11 +14,10 @@ class GradeConfig(ISeedData _seedData) : IEntityTypeConfiguration<GradeEntity>
       .HasKey(key => key.GradeId);
     builder
       .Property(property => property.GradeId)
-      .HasDefaultValue("NEWID()");
+      .HasDefaultValueSql("NEWID()");
     builder
       .Property(property => property.Value)
       .HasColumnOrder(1)
-      .HasPrecision(2, 1)
       .IsRequired();
     builder
       .Property(property => property.CreatedAt)
@@ -46,8 +45,7 @@ class GradeConfig(ISeedData _seedData) : IEntityTypeConfiguration<GradeEntity>
       {
         index.TeacherId,
         index.StudentId
-      })
-      .IsClustered();
+      });
     if (_seedData is not null)
       builder.HasData(_seedData.Grades.GetAll());
   }
