@@ -1,23 +1,24 @@
-var builder = WebApplication.CreateBuilder(args);
+using Autofac.Extensions.DependencyInjection;
+using ManageStudents.API.Utils;
+using ManageStudents.Contracts.Enums;
+using ManageStudents.Infrastructure.Contexts.ManageStudents;
 
-// Add services to the container.
+namespace ManageStudents.API;
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-  app.MapOpenApi();
+  public static async Task Main(string[] args)
+  {
+    IHost host = CreateHostBuilder(args).Build();
+    await DbConnectionSingleton.Start(host).Connect<ManageStudentsContext>(DbConnectionType.Migration);
+    await host.RunAsync();
+  }
+
+  private static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+      .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+      .ConfigureWebHostDefaults(builder =>
+      {
+        builder.UseStartup<Startup>();
+      });
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
