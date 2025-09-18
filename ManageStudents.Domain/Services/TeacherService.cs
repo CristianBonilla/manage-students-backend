@@ -3,6 +3,7 @@ using ManageStudents.Contracts.Exceptions;
 using ManageStudents.Contracts.Services;
 using ManageStudents.Domain.Entities;
 using ManageStudents.Domain.Entities.Enums;
+using ManageStudents.Helpers;
 using ManageStudents.Infrastructure.Repositories.Interfaces;
 
 namespace ManageStudents.Domain.Services;
@@ -14,6 +15,7 @@ public class TeacherService(
 {
   public async Task<TeacherEntity> AddTeacher(TeacherEntity teacher, CancellationToken cancellationToken = default)
   {
+    await CheckTeacher(teacher, cancellationToken);
     TeacherEntity addedTeacher = _teacherRepository.Create(teacher);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -23,6 +25,7 @@ public class TeacherService(
   public async Task<TeacherEntity> UpdateTeacher(TeacherEntity teacher, CancellationToken cancellationToken = default)
   {
     CheckTeacherById(teacher.TeacherId);
+    await CheckTeacher(teacher, cancellationToken);
     TeacherEntity updatedTeacher = _teacherRepository.Update(teacher);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -76,6 +79,18 @@ public class TeacherService(
     bool existingTeacher = _teacherRepository.Exists(teacher => teacher.TeacherId == teacherId);
     if (!existingTeacher)
       throw new ServiceErrorException(HttpStatusCode.NotFound, $"Teacher not found with teacher identifier \"{teacherId}\"");
+  }
+
+  private async Task CheckTeacher(TeacherEntity teacherRequired, CancellationToken cancellationToken = default)
+  {
+    bool existingTeacher = await GetTeachers()
+      .AnyAsync(teacher =>
+        StringCommonHelper.IsStringEquivalent(teacher.DocumentNumber, teacherRequired.DocumentNumber) ||
+        StringCommonHelper.IsStringEquivalent(teacher.Email, teacherRequired.Email) ||
+        StringCommonHelper.IsStringEquivalent(teacher.Mobile, teacherRequired.Mobile),
+        cancellationToken);
+    if (existingTeacher)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, "Teacher information provided may already exist: documentNumber, email or mobile");
   }
 
   private TeacherEntity GetTeacherById(Guid teacherId)

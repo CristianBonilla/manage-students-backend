@@ -2,6 +2,7 @@ using System.Net;
 using ManageStudents.Contracts.Exceptions;
 using ManageStudents.Contracts.Services;
 using ManageStudents.Domain.Entities;
+using ManageStudents.Helpers;
 using ManageStudents.Infrastructure.Repositories.Interfaces;
 
 namespace ManageStudents.Domain.Services;
@@ -13,6 +14,7 @@ public class StudentService(
 {
   public async Task<StudentEntity> AddStudent(StudentEntity student, CancellationToken cancellationToken = default)
   {
+    await CheckStudent(student, cancellationToken);
     StudentEntity addedStudent = _studentRepository.Create(student);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -22,6 +24,7 @@ public class StudentService(
   public async Task<StudentEntity> UpdateStudent(StudentEntity student, CancellationToken cancellationToken = default)
   {
     CheckStudentById(student.StudentId);
+    await CheckStudent(student, cancellationToken);
     StudentEntity updatedStudent = _studentRepository.Update(student);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -69,6 +72,18 @@ public class StudentService(
     bool existingStudent = _studentRepository.Exists(student => student.StudentId == studentId);
     if (!existingStudent)
       throw new ServiceErrorException(HttpStatusCode.NotFound, $"Student not found with student identifier \"{studentId}\"");
+  }
+
+  private async Task CheckStudent(StudentEntity studentRequired, CancellationToken cancellationToken = default)
+  {
+    bool existingStudent = await GetStudents()
+      .AnyAsync(student =>
+        StringCommonHelper.IsStringEquivalent(student.DocumentNumber, studentRequired.DocumentNumber) ||
+        StringCommonHelper.IsStringEquivalent(student.Email, studentRequired.Email) ||
+        StringCommonHelper.IsStringEquivalent(student.Mobile, studentRequired.Mobile),
+        cancellationToken);
+    if (existingStudent)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, "Student information provided may already exist: documentNumber, email or mobile");
   }
 
   private StudentEntity GetStudentById(Guid studentId)
