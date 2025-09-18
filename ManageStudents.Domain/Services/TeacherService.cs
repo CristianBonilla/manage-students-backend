@@ -64,7 +64,12 @@ public class TeacherService(
 
   public Task<TeacherEntity> FindTeacherById(Guid teacherId) => Task.FromResult(GetTeacherById(teacherId));
 
-  public Task<bool> HasAssociatedGrades(Guid teacherId) => Task.FromResult(_gradeRepository.Exists(grade => grade.TeacherId == teacherId));
+  public Task<bool> HasAssociatedGrades(Guid teacherId)
+  {
+    CheckTeacherById(teacherId);
+
+    return Task.FromResult(_gradeRepository.Exists(grade => grade.TeacherId == teacherId));
+  }
 
   private void CheckTeacherById(Guid teacherId)
   {

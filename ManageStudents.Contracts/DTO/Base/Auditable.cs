@@ -1,5 +1,7 @@
-using ManageStudents.Domain.Entities.Base;
-
 namespace ManageStudents.Contracts.DTO.Base;
 
-public class Auditable : AuditableEntity { }
+public class Auditable
+{
+  public DateTimeOffset CreatedAt { get; set; }
+  public DateTimeOffset UpdatedAt { get; set; }
+}
