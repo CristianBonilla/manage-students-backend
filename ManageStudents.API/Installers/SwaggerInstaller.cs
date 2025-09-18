@@ -37,5 +37,6 @@ class SwaggerInstaller : IInstaller
       string xmlCommentsFilePath = DirectoryConfigHelper.GetDirectoryFilePathFromAssemblyName(FileFormatType.Xml, Assembly.GetExecutingAssembly());
       options.IncludeXmlComments(xmlCommentsFilePath, true);
     });
+    services.AddSwaggerGenNewtonsoftSupport();
   }
 }
