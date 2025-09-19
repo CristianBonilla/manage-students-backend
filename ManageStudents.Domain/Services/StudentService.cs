@@ -25,7 +25,7 @@ public class StudentService(
   public async Task<StudentEntity> UpdateStudent(StudentEntity student, CancellationToken cancellationToken = default)
   {
     CheckStudentById(student.StudentId);
-    CheckStudent(student);
+    CheckStudent(student, true);
     StudentEntity updatedStudent = _studentRepository.Update(student);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -56,10 +56,11 @@ public class StudentService(
   public IAsyncEnumerable<StudentEntity> GetStudentsExceptTeacherId(Guid teacherId)
   {
     CheckTeacherById(teacherId);
-    var students = _gradeRepository
-      .GetByFilter(grade => grade.TeacherId != teacherId)
-      .DistinctBy(grade => new { grade.TeacherId, grade.StudentId })
-      .Select(grade => _studentRepository.Find([grade.StudentId])!)
+    var students = _studentRepository
+      .GetAll()
+      .Where(student =>
+        !_gradeRepository.Exists(grade => grade.TeacherId == teacherId && grade.StudentId == student.StudentId) ||
+        !_gradeRepository.Exists(grade => grade.StudentId == student.StudentId))
       .ToAsyncEnumerable();
 
     return students;
@@ -67,7 +68,12 @@ public class StudentService(
 
   public Task<StudentEntity> FindStudentById(Guid studentId) => Task.FromResult(GetStudentById(studentId));
 
-  public Task<bool> HasAssociatedGrades(Guid studentId) => Task.FromResult(_gradeRepository.Exists(grade => grade.StudentId == studentId));
+  public Task<bool> HasAssociatedGrades(Guid studentId)
+  {
+    CheckStudentById(studentId);
+
+    return Task.FromResult(_gradeRepository.Exists(grade => grade.StudentId == studentId));
+  }
 
   private void CheckStudentById(Guid studentId)
   {

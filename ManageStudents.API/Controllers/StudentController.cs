@@ -66,11 +66,12 @@ public class StudentController(IMapper _mapper, IStudentService _studentService)
   [HttpGet("except/{teacherId}")]
   [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IAsyncEnumerable<StudentResponse>))]
   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-  public async IAsyncEnumerable<StudentResponse> GetStudentsExceptTeacherId(Guid teacherId)
+  public IActionResult GetStudentsExceptTeacherId(Guid teacherId)
   {
-    var students = _studentService.GetStudentsExceptTeacherId(teacherId);
-    await foreach (StudentEntity student in students)
-      yield return _mapper.Map<StudentResponse>(student);
+    var students = _studentService.GetStudentsExceptTeacherId(teacherId)
+      .Select(_mapper.Map<StudentResponse>);
+
+    return Ok(students);
   }
 
   [HttpGet("{studentId}")]
