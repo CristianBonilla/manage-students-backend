@@ -14,6 +14,9 @@ public class GradeService(
 {
   public async Task<GradeEntity> AddGrade(GradeEntity grade, CancellationToken cancellationToken = default)
   {
+    CheckTeacherById(grade.TeacherId);
+    CheckStudentById(grade.StudentId);
+    HasTeacherAndStudent(grade.TeacherId, grade.StudentId);
     GradeEntity addedGrade = _gradeRepository.Create(grade);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -25,6 +28,7 @@ public class GradeService(
     CheckGradeById(grade.GradeId);
     CheckTeacherById(grade.TeacherId);
     CheckStudentById(grade.StudentId);
+    HasTeacherAndStudentAssociatedGrades(grade.TeacherId, grade.StudentId);
     GradeEntity updatedGrade = _gradeRepository.Update(grade);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -79,5 +83,22 @@ public class GradeService(
       ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Grade not found with grade identifier \"{gradeId}\"");
 
     return grade;
+  }
+
+  private void HasTeacherAndStudent(Guid teacherId, Guid studentId)
+  {
+    bool existing = _gradeRepository.Exists(grade => grade.TeacherId == teacherId && grade.StudentId == studentId);
+    if (existing)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, $"There is already a grade associated with teacher and student");
+  }
+
+  private void HasTeacherAndStudentAssociatedGrades(Guid teacherId, Guid studentId)
+  {
+    bool existingTeacher = _gradeRepository.Exists(grade => grade.TeacherId == teacherId);
+    if (!existingTeacher)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, "The teacher has no associated grades");
+    bool existingStudent = _gradeRepository.Exists(grade => grade.StudentId == studentId);
+    if (!existingStudent)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, "The student has no associated grades");
   }
 }
