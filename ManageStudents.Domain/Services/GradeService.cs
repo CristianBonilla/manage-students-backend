@@ -17,6 +17,7 @@ public class GradeService(
     CheckTeacherById(grade.TeacherId);
     CheckStudentById(grade.StudentId);
     HasTeacherAndStudent(grade.TeacherId, grade.StudentId);
+    GradeIsValid(grade.Value);
     GradeEntity addedGrade = _gradeRepository.Create(grade);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -29,6 +30,7 @@ public class GradeService(
     CheckTeacherById(grade.TeacherId);
     CheckStudentById(grade.StudentId);
     HasTeacherAndStudentAssociatedGrades(grade.TeacherId, grade.StudentId);
+    GradeIsValid(grade.Value);
     GradeEntity updatedGrade = _gradeRepository.Update(grade);
     _ = await _context.SaveAsync(cancellationToken);
 
@@ -100,5 +102,11 @@ public class GradeService(
     bool existingStudent = _gradeRepository.Exists(grade => grade.StudentId == studentId);
     if (!existingStudent)
       throw new ServiceErrorException(HttpStatusCode.BadRequest, "The student has no associated grades");
+  }
+
+  private static void GradeIsValid(float gradeValue)
+  {
+    if (gradeValue < 0F || gradeValue > 5.0F)
+      throw new ServiceErrorException(HttpStatusCode.BadRequest, "The grade value must be between 0 and 10");
   }
 }
