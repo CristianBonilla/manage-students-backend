@@ -66,9 +66,9 @@ public class StudentController(IMapper _mapper, IStudentService _studentService)
   [HttpGet("except/{teacherId}")]
   [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IAsyncEnumerable<StudentResponse>))]
   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-  public IActionResult GetStudentsExceptTeacherId(Guid teacherId)
+  public IActionResult GetStudentsExcludedByTeacher(Guid teacherId)
   {
-    var students = _studentService.GetStudentsExceptTeacherId(teacherId)
+    var students = _studentService.GetStudentsExcludedByTeacher(teacherId)
       .Select(_mapper.Map<StudentResponse>);
 
     return Ok(students);

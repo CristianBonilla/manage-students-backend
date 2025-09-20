@@ -53,7 +53,7 @@ public class StudentService(
     return students;
   }
 
-  public IAsyncEnumerable<StudentEntity> GetStudentsExceptTeacherId(Guid teacherId)
+  public IAsyncEnumerable<StudentEntity> GetStudentsExcludedByTeacher(Guid teacherId)
   {
     CheckTeacherById(teacherId);
     var students = _studentRepository
