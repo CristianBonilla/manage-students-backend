@@ -70,7 +70,7 @@ public abstract class Repository<TContext, TEntity>(IRepositoryContext<TContext>
   public IEnumerable<TEntity> GetByFilter(
     Expression<Func<TEntity, bool>> filter,
     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-    params Expression<Func<TEntity, object>>[] navigations) => orderBy is not null ? orderBy(WithNavigations(navigations)) : WithNavigations(navigations).Where(filter);
+    params Expression<Func<TEntity, object>>[] navigations) => (orderBy is not null ? orderBy(WithNavigations(navigations)) : WithNavigations(navigations)).Where(filter);
 
   private IQueryable<TEntity> WithNavigations(params Expression<Func<TEntity, object>>[] navigations)
   {
