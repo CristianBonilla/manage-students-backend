@@ -40,7 +40,7 @@ public class GradeController(IMapper _mapper, IGradeService _gradeService) : Con
     return Ok(gradeResponse);
   }
 
-  [HttpDelete]
+  [HttpDelete("{gradeId}")] 
   [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GradeResponse))]
   [ProducesResponseType(StatusCodes.Status404NotFound)]
   [ProducesResponseType(StatusCodes.Status500InternalServerError)]
